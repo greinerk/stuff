@@ -5,15 +5,26 @@ rem %1 server name
 rem %2 db name
 rem %3 SQL scripts root path
 
-del /Q /S %3\%1\%2\*
+SET "server=%1"
+SET "db=%2"
+SET "scripts=%scripts%"
+
+rem remove colons & slashes from servername (used for multiple instances on the same SQL Server)
+SET "b=_"
+SET "a=:"
+CALL SET server=%%server:%a%=%b%%%
+SET "a=\"
+CALL SET server=%%server:%a%=%b%%%
+
+del /Q /S %scripts%\%server%\%db%\*
 
 @echo %date% %time%
 
-call mssql-scripter -S %1 -d %2 -f %3\%1\%2 --file-per-object --exclude-use-database --display-progress --exclude-headers --exclude-schemas SQL# --exclude-types Synonym SqlAssembly
+call mssql-scripter -S %server% -d %db% -f %scripts%\%server%\%db% --file-per-object --exclude-use-database --display-progress --exclude-headers --exclude-schemas SQL# --exclude-types Synonym SqlAssembly
 
 @echo %date% %time%
 
-pushd %3\%1\%2
+pushd %scripts%\%server%\%db%
 
 call %~dp0\pca-sql-schema-fix-files.bat StoredProcedure
 call %~dp0\pca-sql-schema-fix-files.bat Table
