@@ -20,7 +20,7 @@ del /Q /S %scripts%\%server%\%db%\*
 
 @echo %date% %time%
 
-call mssql-scripter -S %server% -d %db% -f %scripts%\%server%\%db% --file-per-object --exclude-use-database --display-progress --exclude-headers --exclude-schemas SQL# --exclude-types Synonym SqlAssembly
+call mssql-scripter -S %1 -d %db% -f %scripts%\%server%\%db% --file-per-object --exclude-use-database --display-progress --exclude-headers --exclude-schemas SQL# --exclude-types Synonym SqlAssembly
 
 @echo %date% %time%
 
